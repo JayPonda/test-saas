@@ -14,6 +14,10 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'user_id',
         as: 'subscriptionPayments'
       });
+      User.hasMany(models.Refund, {
+        foreignKey: 'user_id',
+        as: 'refunds'
+      });
     }
   }
   User.init({
