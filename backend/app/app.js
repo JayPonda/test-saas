@@ -4,6 +4,7 @@ import userRoutes from './routes/users.js';
 import subscriptionRoutes from './routes/subscriptions.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPayments.js';
 import sessionRoutes from './routes/sessions.js';
+import analysisRoutes from './routes/analysis.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/api/users", userRoutes); // Use user routes
 app.use("/api/subscriptions", subscriptionRoutes); // Use subscription routes
 app.use("/api/subscription-payments", subscriptionPaymentRoutes); // Use subscription payment routes
 app.use("/api/sessions", sessionRoutes); // Use session routes
+app.use("/api/analysis", analysisRoutes); // Use analysis routes
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
@@ -32,3 +34,4 @@ app.listen(PORT, () => {
 });
 
 export default app;
+
