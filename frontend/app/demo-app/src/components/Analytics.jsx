@@ -41,10 +41,10 @@ const Analytics = () => {
       ]);
 
       setAnalytics({
-        mrr: mrr?.data !== undefined ? mrr?.data : mrr,
-        oneTimeRevenue: oneTime?.data !== undefined ? oneTime?.data : oneTime,
-        refunds: refunds?.data !== undefined ? refunds?.data : refunds,
-        funnel: funnel?.data !== undefined ? funnel?.data : funnel,
+        mrr: mrr?.monthlyRecurringRevenue,
+        oneTimeRevenue: oneTime?.oneTimePaymentRevenue,
+        refunds: refunds?.totalRefunds,
+        funnel: funnel, // funnel is already an object with the required data
       });
     } catch (error) {
       setError('Failed to fetch analytics: ' + error.message);
@@ -58,13 +58,13 @@ const Analytics = () => {
     <div className="analytics-card">
       {icon && <div className="card-icon">{icon}</div>}
       <h3>{title}</h3>
-      <div className="card-value">{value || 'N/A'}</div>
+      <div className="card-value">{value !== null && value !== undefined ? value : 'N/A'}</div>
       {subtitle && <p className="card-subtitle">{subtitle}</p>}
     </div>
   );
 
   const formatCurrency = (value) => {
-    if (value === null || value === undefined) return 'N/A';
+    if (value === null || value === undefined || isNaN(value)) return 'N/A';
     return `$${parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
@@ -109,19 +109,30 @@ const Analytics = () => {
             icon="↩️"
           />
           {analytics.funnel && (
-            <Card 
-              title="Funnel Events" 
-              value={Array.isArray(analytics.funnel) ? analytics.funnel.length : 'Available'}
-              subtitle={Array.isArray(analytics.funnel) ? 'Conversion pipeline' : 'View in console'}
-              icon="🔗"
-            />
+            <>
+              <Card 
+                title="Total Users Registered" 
+                value={analytics.funnel.totalUsersRegistered !== null ? analytics.funnel.totalUsersRegistered : 'N/A'}
+                icon="👥"
+              />
+              <Card 
+                title="Users Who Bought" 
+                value={analytics.funnel.usersWhoBoughtSubscription !== null ? analytics.funnel.usersWhoBoughtSubscription : 'N/A'}
+                icon="🛒"
+              />
+              <Card 
+                title="Users Who Cancelled" 
+                value={analytics.funnel.usersWhoCancelledSubscription !== null ? analytics.funnel.usersWhoCancelledSubscription : 'N/A'}
+                icon="💔"
+              />
+            </>
           )}
         </div>
       )}
 
       {process.env.NODE_ENV === 'development' && analytics.funnel && (
         <div className="raw-data">
-          <h3>📊 Funnel Data (Development Mode)</h3>
+          <h3>📊 Raw Funnel Data (Development Mode)</h3>
           <pre>{JSON.stringify(analytics.funnel, null, 2)}</pre>
         </div>
       )}

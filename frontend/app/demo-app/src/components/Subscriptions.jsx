@@ -39,12 +39,12 @@ const Subscriptions = () => {
 
   const filteredSubs = filter === 'all' 
     ? subscriptions 
-    : subscriptions.filter(sub => sub.status === filter);
+    : subscriptions.filter(sub => (filter === 'active' ? sub.isActive : !sub.isActive)); // Filter by isActive
 
   const stats = {
     total: subscriptions.length,
-    active: subscriptions.filter(s => s.status === 'active').length,
-    inactive: subscriptions.filter(s => s.status === 'inactive').length,
+    active: subscriptions.filter(s => s.isActive).length, // Use isActive for active count
+    inactive: subscriptions.filter(s => !s.isActive).length, // Use isActive for inactive count
   };
 
   return (
@@ -101,11 +101,10 @@ const Subscriptions = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>User ID</th>
                 <th>Type</th>
                 <th>Status</th>
-                <th>Start Date</th>
-                <th>End Date</th>
+                <th>Activated From</th>
+                <th>Expires At</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -113,18 +112,17 @@ const Subscriptions = () => {
               {filteredSubs.map((sub) => (
                 <tr key={sub.id}>
                   <td className="id-column">{sub.id}</td>
-                  <td>{sub.userId}</td>
-                  <td className="type-column">{sub.subscriptionType || '-'}</td>
+                  <td className="type-column">{sub.type || '-'}</td>
                   <td>
-                    <span className={`status-badge ${sub.status || 'active'}`}>
-                      {sub.status || 'ACTIVE'}
+                    <span className={`status-badge ${sub.isActive ? 'active' : 'inactive'}`}>
+                      {sub.isActive ? 'ACTIVE' : 'INACTIVE'}
                     </span>
                   </td>
                   <td className="date-column">
-                    {sub.startDate ? new Date(sub.startDate).toLocaleDateString() : '-'}
+                    {sub.activatedForm ? new Date(sub.activatedForm).toLocaleDateString() : '-'}
                   </td>
                   <td className="date-column">
-                    {sub.endDate ? new Date(sub.endDate).toLocaleDateString() : 'Ongoing'}
+                    {sub.expiredAt ? new Date(sub.expiredAt).toLocaleDateString() : 'N/A'}
                   </td>
                   <td>
                     <button 

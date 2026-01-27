@@ -30,13 +30,16 @@ const Payments = () => {
     if (sortBy === 'amount') {
       return parseFloat(b.amount || 0) - parseFloat(a.amount || 0);
     }
-    return new Date(b.paymentDate) - new Date(a.paymentDate);
+    // Sort by transaction_meta.ended_at if available, otherwise by subscription_started_at
+    const dateA = a.transaction_meta?.ended_at || a.subscription_started_at;
+    const dateB = b.transaction_meta?.ended_at || b.subscription_started_at;
+    return new Date(dateB) - new Date(dateA);
   });
 
   const stats = {
     total: payments.length,
     totalAmount: payments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0),
-    completed: payments.filter(p => p.status === 'completed').length,
+    completed: payments.filter(p => p.transaction_meta?.status === 'completed').length,
   };
 
   return (
@@ -86,28 +89,28 @@ const Payments = () => {
                 <th>ID</th>
                 <th>Subscription ID</th>
                 <th>Amount</th>
-                <th>Currency</th>
                 <th>Status</th>
                 <th>Payment Date</th>
+                <th>Transaction Type</th>
               </tr>
             </thead>
             <tbody>
               {sortedPayments.map((payment) => (
                 <tr key={payment.id}>
                   <td className="id-column">{payment.id}</td>
-                  <td>{payment.subscriptionId}</td>
+                  <td>{payment.subscription_id}</td>
                   <td className="amount-column">
                     <strong>${parseFloat(payment.amount || 0).toFixed(2)}</strong>
                   </td>
-                  <td>{payment.currency || 'USD'}</td>
                   <td>
-                    <span className={`status-badge ${payment.status || 'completed'}`}>
-                      {payment.status || 'COMPLETED'}
+                    <span className={`status-badge ${payment.transaction_meta?.status || 'unknown'}`}>
+                      {payment.transaction_meta?.status || 'UNKNOWN'}
                     </span>
                   </td>
                   <td className="date-column">
-                    {payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : '-'}
+                    {payment.transaction_meta?.ended_at ? new Date(payment.transaction_meta.ended_at).toLocaleDateString() : '-'}
                   </td>
+                  <td>{payment.transaction_meta?.transaction_type || '-'}</td>
                 </tr>
               ))}
             </tbody>
