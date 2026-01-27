@@ -6,13 +6,14 @@ import {
   updateSubscription,
   deleteSubscription,
 } from '../controllers/SubscriptionController.js';
+import { authenticateSession } from '../middleware/authenticateSession.js';
 
 const router = express.Router();
 
-router.get('/', getAllSubscriptions);
-router.get('/:id', getSubscriptionById);
-router.post('/', createSubscription);
-router.put('/:id', updateSubscription);
-router.delete('/:id', deleteSubscription);
+router.get('/', authenticateSession, getAllSubscriptions);
+router.get('/:id', authenticateSession, getSubscriptionById);
+router.post('/', authenticateSession, createSubscription);
+router.put('/:id', authenticateSession, updateSubscription);
+router.delete('/:id', authenticateSession, deleteSubscription);
 
 export default router;

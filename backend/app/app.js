@@ -3,6 +3,7 @@ import db from './models/index.js';
 import userRoutes from './routes/users.js';
 import subscriptionRoutes from './routes/subscriptions.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPayments.js';
+import sessionRoutes from './routes/sessions.js';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes); // Use user routes
 app.use("/api/subscriptions", subscriptionRoutes); // Use subscription routes
 app.use("/api/subscription-payments", subscriptionPaymentRoutes); // Use subscription payment routes
+app.use("/api/sessions", sessionRoutes); // Use session routes
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
