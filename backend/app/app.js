@@ -5,11 +5,18 @@ import subscriptionRoutes from './routes/subscriptions.js';
 import subscriptionPaymentRoutes from './routes/subscriptionPayments.js';
 import sessionRoutes from './routes/sessions.js';
 import analysisRoutes from './routes/analysis.js';
+import cors from 'cors'; // Import cors
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Configure CORS to allow requests from your frontend origin
+app.use(cors({
+  origin: 'http://localhost:5173', // Allow requests from your frontend development server
+  credentials: true, // Allow sending cookies/auth headers
+}));
 
 // simple route
 app.get("/", (req, res) => {
