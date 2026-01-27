@@ -1,5 +1,3 @@
-
-
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
@@ -21,19 +19,29 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-const files = fs.readdirSync(__dirname);
-
-for (const file of files) {
-  if (
-    file.indexOf('.') !== 0 &&
-    file !== basename &&
-    file.slice(-3) === '.js' &&
-    file.indexOf('.test.js') === -1
-  ) {
-    const modelModule = await import(path.join('file://', __dirname, file));
-    const model = modelModule.default(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
+const modelFiles = [];
+const readModels = (dir) => {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    if (fs.statSync(filePath).isDirectory()) {
+      readModels(filePath);
+    } else if (
+      file.indexOf('.') !== 0 &&
+      file !== basename &&
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
+    ) {
+      modelFiles.push(filePath);
+    }
   }
+};
+readModels(__dirname);
+
+for (const file of modelFiles) {
+  const modelModule = await import(path.join('file://', file));
+  const model = modelModule.default(sequelize, Sequelize.DataTypes);
+  db[model.name] = model;
 }
 
 Object.keys(db).forEach(modelName => {
