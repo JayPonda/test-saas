@@ -52,6 +52,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
+    cancelledAt: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    cancellation_reason: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
   }, {
     sequelize,
     modelName: 'SubscriptionPayment',
