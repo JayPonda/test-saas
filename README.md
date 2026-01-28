@@ -30,7 +30,7 @@ This section details how to set up and run the backend server.
    ```
 2. Install the dependencies using pnpm:
    ```bash
-   pnpm install
+   npm install
    ```
 
 ### Database Setup
@@ -47,7 +47,7 @@ The backend uses Sequelize for ORM and `sqlite3` as the database.
 ### Running the Backend
 To start the backend server:
 ```bash
-pnpm start
+npm start
 ```
 The server should now be running, typically on `http://localhost:3000` (or as configured).
 ## Frontend Setup
@@ -64,12 +64,12 @@ This section details how to set up and run the frontend application.
    ```
 2. Install the dependencies using pnpm:
    ```bash
-   pnpm install
+   npm install
    ```
 
 ### Running the Frontend
 To start the frontend development server:
 ```bash
-pnpm dev
+npm dev
 ```
 The application should now be running, typically on `http://localhost:5173` (or as configured by Vite).

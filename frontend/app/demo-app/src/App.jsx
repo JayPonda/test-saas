@@ -11,8 +11,21 @@ import './App.css';
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [sessionUser, setSessionUser] = useState(null);
+  const [showAuthError, setShowAuthError] = useState(false);
   const dispatch = useDispatch();
-  const sessionId = useSelector((state) => state.session.sessionId); // Get sessionId from Redux
+  const sessionId = useSelector((state) => state.session.sessionId);
+  const prevSessionIdRef = React.useRef();
+
+  useEffect(() => {
+    if (prevSessionIdRef.current && !sessionId) {
+      setShowAuthError(true);
+    }
+    prevSessionIdRef.current = sessionId;
+  }, [sessionId]);
+
+  const handleCloseAuthError = () => {
+    setShowAuthError(false);
+  };
 
   useEffect(() => {
     // Initialize sessionUser from localStorage (if any)
@@ -133,6 +146,16 @@ function App() {
       <footer className="app-footer">
         <p>© 2026 SaaS Admin Dashboard. Backend API: http://localhost:8080/api</p>
       </footer>
+
+      {showAuthError && (
+        <div className="auth-error-popup">
+          <div className="auth-error-popup-content">
+            <h3>Session Expired</h3>
+            <p>Your session has expired. Please log in again.</p>
+            <button onClick={handleCloseAuthError}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

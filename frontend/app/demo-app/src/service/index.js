@@ -11,6 +11,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  validateStatus: (status) => status >= 200 && status < 300,
 });
 
 // ==================== USER SERVICE ====================
@@ -219,7 +220,6 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       store.dispatch(clearSessionId());
-      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

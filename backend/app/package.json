@@ -15,8 +15,10 @@
   "packageManager": "pnpm@10.17.1",
   "dependencies": {
     "@faker-js/faker": "^10.2.0",
+    "@mapbox/node-pre-gyp": "^2.0.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "rb": "^0.2.2",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7"
   },

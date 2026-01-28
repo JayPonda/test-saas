@@ -22,22 +22,10 @@ const Analytics = () => {
       setError(null);
       
       const [mrr, oneTime, refunds, funnel] = await Promise.all([
-        analysisService.getMonthlyRecurringRevenue().catch(err => {
-          console.error('MRR Error:', err.message);
-          return null;
-        }),
-        analysisService.getOneTimePaymentRevenue().catch(err => {
-          console.error('One-time Revenue Error:', err.message);
-          return null;
-        }),
-        analysisService.getRefunds().catch(err => {
-          console.error('Refunds Error:', err.message);
-          return null;
-        }),
-        analysisService.getFunnel().catch(err => {
-          console.error('Funnel Error:', err.message);
-          return null;
-        }),
+        analysisService.getMonthlyRecurringRevenue(),
+        analysisService.getOneTimePaymentRevenue(),
+        analysisService.getRefunds(),
+        analysisService.getFunnel(),
       ]);
 
       setAnalytics({
